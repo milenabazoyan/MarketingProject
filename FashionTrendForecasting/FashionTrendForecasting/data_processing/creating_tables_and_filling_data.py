@@ -11,7 +11,6 @@ class Item(Base):
     __tablename__ = 'item'
     item_id = Column(Integer, primary_key=True)
     name = Column(String)
-    description = Column(String)
     category = Column(String)
     material = Column(String)
     style = Column(String)
@@ -74,7 +73,6 @@ NUM_ENTRIES = 100
 items_data = [{
     'item_id': i,
     'name': fake.word().capitalize(),
-    'description': fake.text(max_nb_chars=50),
     'category': random.choice(['dresses', 'tops', 'pants']),
     'material': random.choice(['cotton', 'polyester', 'wool', 'linen']),
     'style': random.choice(['casual', 'formal', 'sporty']),

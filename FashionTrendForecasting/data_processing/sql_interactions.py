@@ -151,6 +151,23 @@ class Interactions:
             df = pd.read_sql(query, connection)
         return df
 
+    def get_detailed_item_trends(self):
+        '''
+        Detailed Item Trends:
+        Functionality: Returns detailed attributes of items along with their trend score.
+        '''
+        engine = create_engine('sqlite:///FashionAnalysis.db')
+        query = """
+        SELECT i.category, i.material, i.style, i.color, SUM(t.trend_score) as trend_score
+        FROM Item i
+        JOIN Trend t ON i.item_id = t.item_id
+        GROUP BY i.item_id
+        ORDER BY trend_score DESC
+        """
+        with engine.connect() as connection:
+            df = pd.read_sql(query, connection)
+        return df
+
 
 if __name__ == '__main__':
     crud_obj = CRUD()

@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from creating_tables_and_filling_data import Item, Picture, Sales_Outcome, Trend, Search_Frequency
-from insert_data import item_record
+from .insert_data import item_record
 
 class CRUD:
     def __init__(self, db_uri='sqlite:///FashionAnalysis.db'):

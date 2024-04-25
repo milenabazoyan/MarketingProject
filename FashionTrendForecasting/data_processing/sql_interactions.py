@@ -170,8 +170,8 @@ class Interactions:
 
     def get_sales_volume(self):
         '''
-        Detailed Item Trends:
-        Functionality: Returns detailed attributes of items along with their trend score.
+        Items by Sales Volume:
+        Functionality: Returns detailed attributes of items along with their sales volume.
         '''
         engine = create_engine('sqlite:///FashionAnalysis.db')
         query = """

@@ -65,13 +65,18 @@ class CRUD:
 
     def update_item(self, item_id, update_data):
         try:
-            self.session.query(Item).filter(Item.item_id == item_id).update(update_data)
-            self.session.commit()
-            return True
+            result = self.session.query(Item).filter(Item.item_id == item_id).update(update_data)
+            if result > 0:
+                self.session.commit()
+                return True
+            else:
+                self.session.rollback() 
+                return False
         except SQLAlchemyError as e:
             self.session.rollback()
             print(f"Error updating item: {e}")
             return False
+
 
     def delete_item(self, item_id):
         try:
@@ -187,7 +192,7 @@ class Interactions:
             df = pd.read_sql(query, connection)
         return df
 
-    def get_item_with_highest_sales(self, season):
+    def get_item_with_highest_sales(season):
         '''
         Get item with the highest trend score for a given season.
         '''

@@ -15,4 +15,3 @@ def create_app():
     app.include_router(items.router, tags=['items'])
 
     return app
-

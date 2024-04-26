@@ -1,13 +1,27 @@
-from fastapi import APIRouter
-from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException
+from FashionTrendForecasting.api.routers.constants.season import Season
+from FashionTrendForecasting.data_processing.sql_interactions import Interactions
+from fastapi.responses import JSONResponse
+import json
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 router = APIRouter()
 
 @router.get('/trends/seasons/{season}')
 def get_trends_by_season(season: str):
-    return {
-	  "color": "pink",
-	  "style": "floral",
-	  "material": "lightweight material"
-	}
-
+	try:
+		season = Season(season)
+	except ValueError:
+		raise HTTPException(status_code=400, detail="Invalid season")
+	logger.info(f"Finding Most Trending Item of Season = {season}")
+	items_entity = Interactions.get_item_with_highest_sales(season.value)
+	items_json = items_entity.to_json(orient='records')
+	items_dto = json.loads(items_json)
+	if items_dto:  
+		return JSONResponse(content=items_dto[0])
+	else:
+		return JSONResponse(content={})  

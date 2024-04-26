@@ -40,7 +40,8 @@ class CRUD:
                 self.session.add(new_search)
 
             self.session.commit()
-            return True
+            crud_obj = CRUD()
+            return crud_obj.get_item_by_id(new_item.item_id)
         except SQLAlchemyError as e:
             self.session.rollback()
             print(f"Error adding item: {e}")
@@ -60,7 +61,7 @@ class CRUD:
         except SQLAlchemyError as e:
             self.session.rollback()
             print(f"Error getting item with id {item_id}: {e}")
-        return res.name, res.category, res.material, res.style, res.color
+        return res
 
     def update_item(self, item_id, update_data):
         try:

@@ -187,6 +187,24 @@ class Interactions:
             df = pd.read_sql(query, connection)
         return df
 
+    def get_item_with_highest_sales(self, season):
+        '''
+        Get item with the highest trend score for a given season.
+        '''
+        engine = create_engine('sqlite:///FashionAnalysis.db')
+        query = f"""
+        SELECT i.name, i.material, i.category, SUM(t.trend_score) as total_trend_score
+        FROM Item i
+        JOIN Trend t ON i.item_id = t.item_id
+        WHERE t.season = '{season}'
+        GROUP BY i.item_id
+        ORDER BY SUM(t.trend_score) DESC
+        LIMIT 1
+        """
+        with engine.connect() as connection:
+            df = pd.read_sql(query, connection)
+        return df    
+
 
 if __name__ == '__main__':
     crud_obj = CRUD()

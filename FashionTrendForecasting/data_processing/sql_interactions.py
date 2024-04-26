@@ -60,7 +60,7 @@ class CRUD:
         except SQLAlchemyError as e:
             self.session.rollback()
             print(f"Error getting item with id {item_id}: {e}")
-        return res
+        return res.name, res.category, res.material, res.style, res.color
 
     def update_item(self, item_id, update_data):
         try:

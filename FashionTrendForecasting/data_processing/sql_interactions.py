@@ -175,7 +175,7 @@ class Interactions:
         '''
         engine = create_engine('sqlite:///FashionAnalysis.db')
         query = """
-        SELECT i.category, i.material, i.style, i.color, t.season, SUM(s.sales_volume) as sales_volume, SUM(t.trend_score) as trend_score
+        SELECT i.category, i.material, i.style, i.color, SUM(s.sales_volume) as sales_volume, SUM(t.trend_score) as trend_score
         FROM Item i
         JOIN Trend t ON i.item_id = t.item_id
         JOIN Sales_Outcome s ON i.item_id = s.item_id

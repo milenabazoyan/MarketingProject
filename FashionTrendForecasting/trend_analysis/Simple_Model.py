@@ -1,4 +1,4 @@
-from database_processing.sql_interactions import Interactions
+from FashionTrendForecasting.data_processing.sql_interactions import Interactions
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error

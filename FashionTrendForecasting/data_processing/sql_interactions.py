@@ -100,11 +100,18 @@ class Interactions:
             df = pd.read_sql(f"SELECT * FROM {table_name}", connection)
         return df
 
-    def get_seasonal_trend_items(season):
-        '''
+    def get_seasonal_trend_items_top_n(season:str,n:int):
+        """
         Seasonal Trend Items:
         Functionality: Trend data to extract the 3 most popular items for a specified season
-        '''
+
+        Args:
+            season (str): _description_
+            n (int): _description_
+
+        Returns:
+            _type_: _description_
+        """        
 
         engine = create_engine('sqlite:///FashionAnalysis.db')
         query = f"""
@@ -114,7 +121,7 @@ class Interactions:
         WHERE t.season = '{season}'
         GROUP BY t.item_id
         ORDER BY total_trend_score DESC
-        LIMIT 3
+        LIMIT {n}
         """
         with engine.connect() as connection:
             df = pd.read_sql(query, connection)

@@ -1,2 +1,3 @@
 from FashionTrendForecasting.trend_analysis import *
 from FashionTrendForecasting.trend_analysis.database_manager import add_predictions_to_database
+from ..data_processing.sql_interactions import CRUD

@@ -92,28 +92,38 @@ class CRUD:
 
 class Interactions:
     def __init__(self, db_uri='sqlite:///FashionAnalysis.db'):
-        self.db_uri = db_uri
+        self.engine = create_engine(db_uri)
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
 
-    def select_all_as_df(table_name):
-        engine = create_engine('sqlite:///FashionAnalysis.db')
-        with engine.connect() as connection:
-            df = pd.read_sql(f"SELECT * FROM {table_name}", connection)
-        return df
-
-    def get_seasonal_trend_items_top_n(season:str,n:int):
+    def select_all_as_df(table_name: str) -> pd.DataFrame:
         """
-        Seasonal Trend Items:
-        Functionality: Trend data to extract the 3 most popular items for a specified season
+        Select All Table:
+        Returns all rows and columns of the given table.
 
         Args:
-            season (str): _description_
-            n (int): _description_
+            table_name (str): The table for which to fetch data.
 
         Returns:
-            _type_: _description_
-        """        
+            pd.DataFrame: A DataFrame containing all rows and columns of the table.
+        """  
 
-        engine = create_engine('sqlite:///FashionAnalysis.db')
+        df = pd.read_sql(f"SELECT * FROM {table_name}")
+        return df
+
+    def get_seasonal_trend_items_top_n(season:str,n:int) -> pd.DataFrame:
+        """
+        Seasonal Trend Items:
+        Extracts the top n popular items for a specified season based on trend scores.
+
+        Args:
+            season (str): The season for which to fetch trend data.
+            n (int): The number of top items to return.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing the top n items with their categories, materials, and total trend scores.
+        """            
+
         query = f"""
         SELECT i.category, i.material, SUM(t.trend_score) as total_trend_score
         FROM Trend t
@@ -123,18 +133,19 @@ class Interactions:
         ORDER BY total_trend_score DESC
         LIMIT {n}
         """
-        with engine.connect() as connection:
-            df = pd.read_sql(query, connection)
+        df = pd.read_sql(query)
         return df
 
 
-    def get_popularity_metrics(self):
+    def get_popularity_metrics(self) -> pd.DataFrame:
         '''
         Popularity Metrics:
         Functionality: Use the Search_Frequency entity to identify items with the highest search_count, indicating current consumer interest.
+        
+        Returns:
+            pd.DataFrame: A DataFrame containing item category and material with the max search count.
         '''
 
-        engine = create_engine('sqlite:///FashionAnalysis.db')
         query = """
         SELECT i.category, i.material, MAX(sf.search_count) as max_search_count
         FROM Search_Frequency sf
@@ -142,17 +153,19 @@ class Interactions:
         GROUP BY sf.item_id
         ORDER BY max_search_count DESC
         """
-        with engine.connect() as connection:
-            df = pd.read_sql(query, connection)
+        df = pd.read_sql(query)
         return df
 
 
-    def get_sales_performance(self):
+    def get_sales_performance(self) -> pd.DataFrame:
         '''
-        PSales Performance:
+        Sales Performance:
         Functionality: Sales_Outcome to determine which items have the highest sales_volume.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing item category and material with total sales volume.
         '''
-        engine = create_engine('sqlite:///FashionAnalysis.db')
+
         query = """
         SELECT i.category, i.material, SUM(so.sales_volume) as total_sales_volume
         FROM Sales_Outcome so
@@ -160,16 +173,18 @@ class Interactions:
         GROUP BY so.item_id
         ORDER BY total_sales_volume DESC
         """
-        with engine.connect() as connection:
-            df = pd.read_sql(query, connection)
+        df = pd.read_sql(query)
         return df
 
-    def get_detailed_item_trends(self):
+    def get_detailed_item_trends(self) -> pd.DataFrame:
         '''
         Detailed Item Trends:
         Functionality: Returns detailed attributes of items along with their trend score.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing item category, material, style and color with total trend score.
         '''
-        engine = create_engine('sqlite:///FashionAnalysis.db')
+
         query = """
         SELECT i.category, i.material, i.style, i.color, SUM(t.trend_score) as trend_score
         FROM Item i
@@ -177,16 +192,18 @@ class Interactions:
         GROUP BY i.item_id
         ORDER BY trend_score DESC
         """
-        with engine.connect() as connection:
-            df = pd.read_sql(query, connection)
+        df = pd.read_sql(query)
         return df
 
-    def get_sales_volume(self):
+    def get_sales_volume(self) -> pd.DataFrame:
         '''
         Items by Sales Volume:
         Functionality: Returns detailed attributes of items along with their sales volume.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing item category, material, style and color with total sales volume and total trend score.
         '''
-        engine = create_engine('sqlite:///FashionAnalysis.db')
+
         query = """
         SELECT i.category, i.material, i.style, i.color, SUM(s.sales_volume) as sales_volume, SUM(t.trend_score) as trend_score
         FROM Item i
@@ -195,15 +212,21 @@ class Interactions:
         GROUP BY i.item_id
         ORDER BY sales_volume DESC
         """
-        with engine.connect() as connection:
-            df = pd.read_sql(query, connection)
+        df = pd.read_sql(query)
         return df
 
-    def get_item_with_highest_sales(season):
+    def get_top_n_items_with_highest_sales(season: str, n: int) -> pd.DataFrame:
         '''
         Get item with the highest trend score for a given season.
+
+        Args:
+            season (str): The season for which to fetch trend data.
+            n (int): The number of top items to return.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing the top n items of that season with their name, categories, materials, and total trend scores.
         '''
-        engine = create_engine('sqlite:///FashionAnalysis.db')
+
         query = f"""
         SELECT i.name, i.material, i.category, SUM(t.trend_score) as total_trend_score
         FROM Item i
@@ -211,10 +234,9 @@ class Interactions:
         WHERE t.season = '{season}'
         GROUP BY i.item_id
         ORDER BY SUM(t.trend_score) DESC
-        LIMIT 1
+        LIMIT {n}
         """
-        with engine.connect() as connection:
-            df = pd.read_sql(query, connection)
+        df = pd.read_sql(query)
         return df    
 
 

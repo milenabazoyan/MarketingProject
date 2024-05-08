@@ -8,6 +8,7 @@ To install EcoTrendz, use the following pip command:
 
 ```bash
 pip install ecotrendz
+```
 
 For more details, updates, and versions, please visit our project on PyPI:
 [EcoTrendz on PyPI]( "should be the link of the package")

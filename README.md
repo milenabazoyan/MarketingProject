@@ -12,3 +12,7 @@ pip install ecotrendz
 
 For more details, updates, and versions, please visit our project on PyPI:
 [EcoTrendz on PyPI]( "should be the link of the package")
+
+
+## License
+This project is licensed under the MIT License. For more details, see the LICENSE file in the repository.

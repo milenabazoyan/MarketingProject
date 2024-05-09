@@ -1,7 +1,8 @@
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.ensemble import RandomForestRegressor
+import pandas as pd
 
 def split_data(data, target_feature):
     y_train = data[target_feature]
@@ -27,7 +28,7 @@ def train_and_predict(X_train, y_train, new_data):
     # Create the model pipeline
     model = Pipeline(steps=[
         ('preprocessor', preprocessor),
-        ('regressor', GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42))
+        ('regressor', RandomForestRegressor(n_estimators=100, random_state=42))
     ])
 
     # Train the model
@@ -37,5 +38,4 @@ def train_and_predict(X_train, y_train, new_data):
     y_pred = model.predict(new_data)
 
     return y_pred
-
 

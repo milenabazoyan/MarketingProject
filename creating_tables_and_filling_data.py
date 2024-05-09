@@ -6,6 +6,7 @@ import random
 
 Base = declarative_base()
 fake = Faker()
+ENGINE = create_engine('sqlite:///main/db_file/FashionAnalysis.db', echo=True)
 
 class Item(Base):
     __tablename__ = 'item'
@@ -21,6 +22,7 @@ class Item(Base):
     sales_outcomes = relationship('Sales_Outcome', back_populates='item')
     trends = relationship('Trend', back_populates='item')
     search_frequencies = relationship('Search_Frequency', back_populates='item')
+    predicted_trend_score = Column(Float)
 
 class Picture(Base):
     __tablename__ = 'picture'
@@ -59,9 +61,9 @@ class Search_Frequency(Base):
 
 
 if __name__ == '__main__':
-    engine = create_engine('sqlite:///FashionAnalysis.db', echo=True)
-    Base.metadata.create_all(engine)
-    Session = sessionmaker(bind=engine)
+
+    Base.metadata.create_all(ENGINE)
+    Session = sessionmaker(bind=ENGINE)
     session = Session()
 
     session.commit()
@@ -76,7 +78,8 @@ if __name__ == '__main__':
         'material': random.choice(['cotton', 'polyester', 'wool', 'linen']),
         'style': random.choice(['casual', 'formal', 'sporty']),
         'color': fake.color_name(),
-        'picture_id': i
+        'picture_id': i,
+        'predicted_trend_score': 0
     } for i in range(1, NUM_ENTRIES + 1)]
 
     pictures_data = [{
@@ -107,7 +110,7 @@ if __name__ == '__main__':
     } for i in range(1, NUM_ENTRIES + 1)]
 
     # Insert data into the database
-    Session = sessionmaker(bind=engine)
+    Session = sessionmaker(bind=ENGINE)
     session = Session()
 
     for item in items_data:

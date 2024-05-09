@@ -178,7 +178,7 @@ class Interactions:
         df = pd.read_sql(f"SELECT * FROM {table_name}", self.connect)
         return df
 
-    def get_seasonal_trend_items_top_n_offset_k(self, season: str, n: int, k: int) -> pd.DataFrame:
+    def get_seasonal_trend_items_top_n_offset_k(self, season: str, n: int, k: int) -> list:
         """
         Seasonal Trend Items:
         Extracts the top n popular items for a specified season based on trend scores.
@@ -189,7 +189,7 @@ class Interactions:
             k (int): The number of rows for offset
 
         Returns:
-            pd.DataFrame: A DataFrame containing the top n items with their categories, materials, and total trend scores.
+            list: nested list of the given n items material, category and sum of trend_score.
         """
 
         query = f"""

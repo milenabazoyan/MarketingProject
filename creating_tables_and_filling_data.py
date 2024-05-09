@@ -6,7 +6,7 @@ import random
 
 Base = declarative_base()
 fake = Faker()
-ENGINE = create_engine('sqlite:///main/db_file/FashionAnalysis.db', echo=True)
+ENGINE = create_engine('sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db', echo=True)
 
 class Item(Base):
     __tablename__ = 'item'

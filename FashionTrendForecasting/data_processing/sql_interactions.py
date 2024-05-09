@@ -5,13 +5,23 @@ from sqlalchemy import create_engine
 from creating_tables_and_filling_data import Item, Picture, Sales_Outcome, Trend, Search_Frequency
 
 ENGINE = create_engine('sqlite:///../FashionTrendForecasting/db_file/FashionAnalysis.db')
+
 class CRUD:
     def __init__(self):
         self.engine = ENGINE
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
 
-    def add_item_with_details(self, item_data):
+    def add_item_with_details(self, item_data: dict) -> bool:
+        """
+        Add item with details:
+        Adds new item to the table
+        Args:
+            item_data (dict): Dictionary of new column values
+
+        Returns:
+            Bool: True or False
+        """
         try:
             # Create the main Item record
             new_item = Item(**{key: value for key, value in item_data.items() if key in Item.__table__.columns})
@@ -53,7 +63,44 @@ class CRUD:
             print(f"Error retrieving items: {e}")
             return []
 
+    def get_item_data_by_id(self, item_id: int) -> list:
+        """
+        Get item data by id:
+        Gives item information from item table by the given id
+        
+        Args:
+            item_id (int): Item id
+
+        Returns:
+            list: item information as a list
+        """
+        res = None
+        try:
+            # Query the item from the database
+            item = self.session.query(Item).filter(Item.item_id == item_id).one_or_none()
+            if item:
+                # Create a list of item data you want to return
+                res = [
+                    item.category,
+                    item.material,
+                    item.predicted_trend_score,
+                ]
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            print(f"Error getting item with id {item_id}: {e}")
+        return res
+
     def get_item_by_id(self, item_id):
+        """
+        Get item data by id:
+        Gives object from item table by the given id
+
+        Args:
+            item_id (int): Item id
+
+        Returns:
+            obj: Object from item table
+        """
         res = None
         try:
             res = self.session.query(Item).filter(Item.item_id == item_id).one_or_none()
@@ -62,7 +109,18 @@ class CRUD:
             print(f"Error getting item with id {item_id}: {e}")
         return res
 
-    def update_item(self, item_id, update_data):
+    def update_item(self, item_id: int, update_data: dict) -> bool:
+        """
+        update item
+        updates item with the given info
+
+        Args:
+            item_id (int): Item id
+            update_data (dict): Dictionary of nee data
+
+        Returns:
+            bool: True or False
+        """
         try:
             result = self.session.query(Item).filter(Item.item_id == item_id).update(update_data)
             if result > 0:
@@ -76,7 +134,17 @@ class CRUD:
             print(f"Error updating item: {e}")
             return False
 
-    def delete_item(self, item_id):
+    def delete_item(self, item_id: int) -> bool:
+        """
+        Delete item
+        Deletes item with the given id
+
+        Args:
+            item_id (int): Item id
+
+        Returns:
+            bool: True or False
+        """
         try:
             item_to_delete = self.session.query(Item).filter(Item.item_id == item_id).one()
             self.session.delete(item_to_delete)

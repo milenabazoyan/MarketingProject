@@ -2,7 +2,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestRegressor
-import pandas as pd
 
 def split_data(data, target_feature):
     y_train = data[target_feature]

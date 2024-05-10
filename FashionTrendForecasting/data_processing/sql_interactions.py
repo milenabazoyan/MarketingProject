@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import create_engine
 from creating_tables_and_filling_data import Item, Picture, Sales_Outcome, Trend, Search_Frequency
 
-ENGINE = create_engine('sqlite:///../FashionTrendForecasting/db_file/FashionAnalysis.db')
+ENGINE = create_engine('sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db')
 
 class CRUD:
     def __init__(self):

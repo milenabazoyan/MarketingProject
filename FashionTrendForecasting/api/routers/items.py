@@ -1,19 +1,10 @@
-from datetime import date
 from fastapi import APIRouter, HTTPException
 from pydantic import ValidationError
-from pydantic import BaseModel, Extra
+from pydantic import BaseModel
 from FashionTrendForecasting.api.routers.constants.season import Season
-from FashionTrendForecasting.data_processing.sql_interactions import Interactions
-from FashionTrendForecasting.data_processing.sql_interactions import CRUD
-import pandas as pd
 from fastapi.responses import JSONResponse
-import json
-import logging
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-crud_obj=CRUD()
+from FashionTrendForecasting.api.utilities.logger import logger
+from FashionTrendForecasting.api.utilities.dao import crud_obj, interactions
 
 class ItemDTO(BaseModel):
     name: str
@@ -73,13 +64,21 @@ def get_item_by_id(id: int):
 
 
 @router.get('/items/seasons/{season}')
-def get_items_by_season(season: str):
+def get_items_by_season(season: str, limit: int = 0, offset: int = 0):
     try:
         season = Season(season)
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid season")
-    logger.info(f"Finding Items for Season = {season}")
-    items_entity = Interactions.get_seasonal_trend_items(season.value)
-    items_json = items_entity.to_json(orient='records')
-    items_dto = json.loads(items_json)
-    return JSONResponse(content=items_dto)
+    logger.info(f"Finding Items for Season={season}, limit={limit}, offset={offset}")
+    items = interactions.get_seasonal_trend_items_top_n_offset_k(season.value, limit+1, offset)
+    if len(items)>limit:
+        next_page=f'http://127.0.0.1:8000/items/seasons/{season.value}?limit={limit}&offset={offset + limit}'
+        items=items[:limit]
+    else:
+        next_page=None
+    response={ 
+        "items": items,
+        "next_page": next_page
+    }
+    return JSONResponse(content=response)
+

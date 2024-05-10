@@ -1,18 +1,27 @@
-from sqlalchemy import create_engine, text
 import pandas as pd
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import create_engine
 from creating_tables_and_filling_data import Item, Picture, Sales_Outcome, Trend, Search_Frequency
-from FashionTrendForecasting.data_processing.insert_data import item_record
+
+ENGINE = create_engine('sqlite:///../FashionTrendForecasting/db_file/FashionAnalysis.db')
 
 class CRUD:
-    def __init__(self, db_uri='sqlite:///FashionAnalysis.db'):
-        self.engine = create_engine(db_uri)
+    def __init__(self):
+        self.engine = ENGINE
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
 
-    def add_item_with_details(self, item_data):
+    def add_item_with_details(self, item_data: dict) -> bool:
+        """
+        Add item with details:
+        Adds new item to the table
+        Args:
+            item_data (dict): Dictionary of new column values
+
+        Returns:
+            Bool: True or False
+        """
         try:
             # Create the main Item record
             new_item = Item(**{key: value for key, value in item_data.items() if key in Item.__table__.columns})
@@ -54,7 +63,44 @@ class CRUD:
             print(f"Error retrieving items: {e}")
             return []
 
+    def get_item_data_by_id(self, item_id: int) -> list:
+        """
+        Get item data by id:
+        Gives item information from item table by the given id
+        
+        Args:
+            item_id (int): Item id
+
+        Returns:
+            list: item information as a list
+        """
+        res = None
+        try:
+            # Query the item from the database
+            item = self.session.query(Item).filter(Item.item_id == item_id).one_or_none()
+            if item:
+                # Create a list of item data you want to return
+                res = [
+                    item.category,
+                    item.material,
+                    item.predicted_trend_score,
+                ]
+        except SQLAlchemyError as e:
+            self.session.rollback()
+            print(f"Error getting item with id {item_id}: {e}")
+        return res
+
     def get_item_by_id(self, item_id):
+        """
+        Get item data by id:
+        Gives object from item table by the given id
+
+        Args:
+            item_id (int): Item id
+
+        Returns:
+            obj: Object from item table
+        """
         res = None
         try:
             res = self.session.query(Item).filter(Item.item_id == item_id).one_or_none()
@@ -63,22 +109,42 @@ class CRUD:
             print(f"Error getting item with id {item_id}: {e}")
         return res
 
-    def update_item(self, item_id, update_data):
+    def update_item(self, item_id: int, update_data: dict) -> bool:
+        """
+        update item
+        updates item with the given info
+
+        Args:
+            item_id (int): Item id
+            update_data (dict): Dictionary of nee data
+
+        Returns:
+            bool: True or False
+        """
         try:
             result = self.session.query(Item).filter(Item.item_id == item_id).update(update_data)
             if result > 0:
                 self.session.commit()
                 return True
             else:
-                self.session.rollback() 
+                self.session.rollback()
                 return False
         except SQLAlchemyError as e:
             self.session.rollback()
             print(f"Error updating item: {e}")
             return False
 
+    def delete_item(self, item_id: int) -> bool:
+        """
+        Delete item
+        Deletes item with the given id
 
-    def delete_item(self, item_id):
+        Args:
+            item_id (int): Item id
+
+        Returns:
+            bool: True or False
+        """
         try:
             item_to_delete = self.session.query(Item).filter(Item.item_id == item_id).one()
             self.session.delete(item_to_delete)
@@ -91,12 +157,13 @@ class CRUD:
 
 
 class Interactions:
-    def __init__(self, db_uri='sqlite:///FashionAnalysis.db'):
-        self.engine = create_engine(db_uri)
+    def __init__(self):
+        self.engine = ENGINE
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
+        self.connect = self.engine.connect()
 
-    def select_all_as_df(table_name: str) -> pd.DataFrame:
+    def select_all_as_df(self, table_name: str) -> pd.DataFrame:
         """
         Select All Table:
         Returns all rows and columns of the given table.
@@ -106,12 +173,12 @@ class Interactions:
 
         Returns:
             pd.DataFrame: A DataFrame containing all rows and columns of the table.
-        """  
+        """
 
-        df = pd.read_sql(f"SELECT * FROM {table_name}")
+        df = pd.read_sql(f"SELECT * FROM {table_name}", self.connect)
         return df
 
-    def get_seasonal_trend_items_top_n(season:str,n:int) -> pd.DataFrame:
+    def get_seasonal_trend_items_top_n_offset_k(self, season: str, n: int, k: int) -> list:
         """
         Seasonal Trend Items:
         Extracts the top n popular items for a specified season based on trend scores.
@@ -119,10 +186,11 @@ class Interactions:
         Args:
             season (str): The season for which to fetch trend data.
             n (int): The number of top items to return.
+            k (int): The number of rows for offset
 
         Returns:
-            pd.DataFrame: A DataFrame containing the top n items with their categories, materials, and total trend scores.
-        """            
+            list: nested list of the given n items material, category and sum of trend_score.
+        """
 
         query = f"""
         SELECT i.category, i.material, SUM(t.trend_score) as total_trend_score
@@ -132,16 +200,16 @@ class Interactions:
         GROUP BY t.item_id
         ORDER BY total_trend_score DESC
         LIMIT {n}
+        OFFSET {k}
         """
-        df = pd.read_sql(query)
-        return df
-
+        df = pd.read_sql(query, self.connect)
+        return df.values.tolist()
 
     def get_popularity_metrics(self) -> pd.DataFrame:
         '''
         Popularity Metrics:
         Functionality: Use the Search_Frequency entity to identify items with the highest search_count, indicating current consumer interest.
-        
+
         Returns:
             pd.DataFrame: A DataFrame containing item category and material with the max search count.
         '''
@@ -153,9 +221,8 @@ class Interactions:
         GROUP BY sf.item_id
         ORDER BY max_search_count DESC
         """
-        df = pd.read_sql(query)
+        df = pd.read_sql(query, self.connect)
         return df
-
 
     def get_sales_performance(self) -> pd.DataFrame:
         '''
@@ -173,7 +240,7 @@ class Interactions:
         GROUP BY so.item_id
         ORDER BY total_sales_volume DESC
         """
-        df = pd.read_sql(query)
+        df = pd.read_sql(query, self.connect)
         return df
 
     def get_detailed_item_trends(self) -> pd.DataFrame:
@@ -192,7 +259,7 @@ class Interactions:
         GROUP BY i.item_id
         ORDER BY trend_score DESC
         """
-        df = pd.read_sql(query)
+        df = pd.read_sql(query, self.connect)
         return df
 
     def get_sales_volume(self) -> pd.DataFrame:
@@ -212,10 +279,10 @@ class Interactions:
         GROUP BY i.item_id
         ORDER BY sales_volume DESC
         """
-        df = pd.read_sql(query)
+        df = pd.read_sql(query, self.connect)
         return df
 
-    def get_top_n_items_with_highest_sales(season: str, n: int) -> pd.DataFrame:
+    def get_top_n_items_with_highest_sales(self, season: str, n: int) -> pd.DataFrame:
         '''
         Get item with the highest trend score for a given season.
 
@@ -236,36 +303,5 @@ class Interactions:
         ORDER BY SUM(t.trend_score) DESC
         LIMIT {n}
         """
-        df = pd.read_sql(query)
-        return df    
-
-
-if __name__ == '__main__':
-    crud_obj = CRUD()
-    print("testing insert operation")
-
-    if crud_obj.add_item_with_details(item_record):
-        print("PASS: New row inserted")
-    else:
-        print("FAIL: new row was not inserted")
-
-    A = crud_obj.get_items()
-
-    print("testing update operation")
-
-    update_data = {
-        "name": "Vintage pants",
-        "category": "pants",
-        "material": "linen"
-    }
-    if crud_obj.update_item(100, update_data):
-        print("PASS: Updated successfully")
-    else:
-        print("FAILS: Was not updates")
-
-    print("testing delete operation")
-
-    if crud_obj.delete_item(5):
-        print("PASS: object deleted")
-    else:
-        print("FAIL: object was not deleted")
+        df = pd.read_sql(query, self.connect)
+        return df

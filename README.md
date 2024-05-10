@@ -16,3 +16,23 @@ For more details, updates, and versions, please visit our project on PyPI:
 
 ## License
 This project is licensed under the MIT License. For more details, see the LICENSE file in the repository.
+
+
+## Getting Started
+
+To run the project, follow these steps:
+
+1. **Install Dependencies**:
+   Install all required packages using the command below:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. **Run the Application**:
+   Start the application by running:
+   ```bash
+   python run.py
+   ```
+3. **Access the Application**:
+   - **Open the Application**: Navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
+   - **API Documentation**: To access the API documentation, visit [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). 
+

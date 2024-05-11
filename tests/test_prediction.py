@@ -1,5 +1,5 @@
 import pandas as pd
-from FashionTrendForecasting.trend_analysis.model import split_data, train_and_predict
+from FashionTrendForecasting.trend_analysis.model import split_data, train_and_predict_rf
 from FashionTrendForecasting.data_processing.sql_interactions import Interactions, CRUD
 
 # Define new data as a DataFrame
@@ -22,7 +22,7 @@ df = interactions.get_sales_volume()
 X_train, y_train = split_data(df, 'trend_score')
 
 # Model training and prediction
-y_pred = train_and_predict(X_train, y_train, new_data)
+y_pred = train_and_predict_rf(X_train, y_train, new_data)
 print(y_pred)
 
 # Adding items to the database and updating with predicted trend scores

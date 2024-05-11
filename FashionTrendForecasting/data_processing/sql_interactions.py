@@ -3,8 +3,24 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import create_engine
 from creating_tables_and_filling_data import Item, Picture, Sales_Outcome, Trend, Search_Frequency
+import os
 
-ENGINE = create_engine('sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db')
+engine_dict = {
+    'sql_interactions.py': 'sqlite:///../FashionTrendForecasting/db_file/FashionAnalysis.db',
+    'example_usage_functionality.ipynb': 'sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db',
+    'test_prediction.py': 'sqlite:///../FashionTrendForecasting/db_file/FashionAnalysis.db',
+    'test_trend_analysis.py': 'sqlite:///../FashionTrendForecasting/db_file/FashionAnalysis.db',
+    'trends.py': 'sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db',
+    'items.py': 'sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db',
+    'dao.py': 'sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db'
+}
+
+def get_engine():
+    current_file = os.path.basename(__file__)  # Get the current file name
+    db_path = engine_dict.get(current_file, 'sqlite:///../main/db_file/Default.db')  # Default path if file not found
+    return create_engine(db_path)
+
+ENGINE = get_engine()
 
 class CRUD:
     def __init__(self):

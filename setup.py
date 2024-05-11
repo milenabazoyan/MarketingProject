@@ -6,6 +6,7 @@ with open("README.md", "r", encoding = "utf-8") as fh:
 setup(
     author = 'Anahit Manukyan, Milena Bazoyan, Lusine Torosyan, Sate Antaranyan',
     description= 'A package for predicting fashion trends',
+    long_description_content_type="text/markdown"
     name = 'FashionTrendForecasting',
     version = '0.1.0',
     packages = find_packages(include = ['FashionTrendForecasting', 'FashionTrendForecasting.*']),

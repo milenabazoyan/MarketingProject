@@ -1,4 +1,8 @@
 from setuptools import setup, find_packages
+
+with open("README.md", "r", encoding = "utf-8") as fh:
+    long_description = fh.read()
+
 setup(
     author = 'Anahit Manukyan, Milena Bazoyan, Lusine Torosyan, Sate Antaranyan',
     description= 'A package for predicting fashion trends',

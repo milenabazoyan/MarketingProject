@@ -6,18 +6,15 @@ from creating_tables_and_filling_data import Item, Picture, Sales_Outcome, Trend
 import os
 
 engine_dict = {
-    'sql_interactions.py': 'sqlite:///../FashionTrendForecasting/db_file/FashionAnalysis.db',
-    'example_usage_functionality.ipynb': 'sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db',
-    'test_prediction.py': 'sqlite:///../FashionTrendForecasting/db_file/FashionAnalysis.db',
-    'test_trend_analysis.py': 'sqlite:///../FashionTrendForecasting/db_file/FashionAnalysis.db',
-    'trends.py': 'sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db',
-    'items.py': 'sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db',
-    'dao.py': 'sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db'
+    'data_processing': 'sqlite:///../../FashionTrendForecasting/db_file/FashionAnalysis.db',
+    'tests': 'sqlite:///../FashionTrendForecasting/db_file/FashionAnalysis.db',
+    'utilities': 'sqlite:///../../../FashionTrendForecasting/db_file/FashionAnalysis.db',
+    'routers': 'sqlite:///../../../FashionTrendForecasting/db_file/FashionAnalysis.db'
 }
 
 def get_engine():
-    current_file = os.path.basename(__file__)  # Get the current file name
-    db_path = engine_dict.get(current_file, 'sqlite:///../main/db_file/Default.db')  # Default path if file not found
+    current_file = os.path.basename(os.getcwd())
+    db_path = engine_dict.get(current_file, 'sqlite:///FashionTrendForecasting/db_file/FashionAnalysis.db')  # Default path if file not found
     return create_engine(db_path)
 
 ENGINE = get_engine()

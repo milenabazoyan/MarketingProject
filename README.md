@@ -36,3 +36,4 @@ To run the project, follow these steps:
    - **Open the Application**: Navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
    - **API Documentation**: To access the API documentation, visit [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). 
 
+

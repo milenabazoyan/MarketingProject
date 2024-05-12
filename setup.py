@@ -10,7 +10,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     name='FashionTrendForecasting',
-    version='0.2.0',
+    version='0.1.0',
     packages=find_packages(include=['FashionTrendForecasting', 'FashionTrendForecasting.*']),
     install_requires=[
         'numpy>=1.26.4',             

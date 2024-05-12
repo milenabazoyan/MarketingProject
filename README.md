@@ -13,10 +13,10 @@ FashionTrendForecasting is a Python package designed to analyze and predict fash
 To install FashionTrendForecasting, use the following pip command:
 
 ```bash
-pip install FashionTrendForecasting==0.1.0
+pip install FashionTrendForecasting
 ```
 
-For the latest updates and version information, visit our [FashionTrendForecasting PyPI page]( "(https://pypi.org/project/FashionTrendForecasting/#description)")
+For the latest updates and version information, visit our [FashionTrendForecasting PyPI page](https://pypi.org/project/FashionTrendForecasting/#description)
 
 ## Getting Started
 

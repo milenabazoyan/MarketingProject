@@ -40,8 +40,7 @@ To run the project, follow these steps:
    python run.py
    ```
 4. **Access the Application**:
-   - **Local Server**: Navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
-   - **API Documentation**: To access the API documentation, visit [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs). 
+   - **API Documentation**: To access the API documentation, visit [http://127.0.0.1:8000](http://127.0.0.1:8000). 
 
 
 ## Documentation

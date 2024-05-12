@@ -1,14 +1,6 @@
 site_name: Fashion Trend Forecasting
 theme:
   name: material
-  features:
-    - navigation.tabs
-    - navigation.sections
-    - toc.integrate
-    - navigation.top
-    - search.highlight
-    - content.code.annotation
-    - content.code.copy
   language: en
   palette:
     - scheme: default

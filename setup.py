@@ -2,23 +2,29 @@ from setuptools import setup, find_packages
 
 with open("README.md", "r", encoding = "utf-8") as fh:
     long_description = fh.read()
-
 setup(
-    author = 'Anahit Manukyan, Milena Bazoyan, Lusine Torosyan, Sate Antaranyan',
-    description= 'A package for predicting fashion trends',
-    long_description_content_type="text/markdown"
-    name = 'FashionTrendForecasting',
-    version = '0.1.0',
-    packages = find_packages(include = ['FashionTrendForecasting', 'FashionTrendForecasting.*']),
+    author='Anahit Manukyan, Milena Bazoyan, Lusine Torosyan, Sate Antaranyan',
+    description='A package for predicting fashion trends',
+    long_description_content_type="text/markdown",
+    name='FashionTrendForecasting',
+    version='0.2.0',
+    packages=find_packages(include=['FashionTrendForecasting', 'FashionTrendForecasting.*']),
     install_requires=[
+        'aiobotocore',
+        'aiohttp',
+        'aioitertools',
+        'aiosignal',
+        'alabaster',
+        'altair',
+        'anaconda-client',
+        'anaconda-navigator',
+        'anaconda-project',
         'annotated-types==0.6.0',
         'anyio==4.3.0',
         'appnope==0.1.4',
         'argon2-cffi==23.1.0',
-        'argon2-cffi-bindings==21.2.0',
         'arrow==1.3.0',
         'asttokens==2.4.1',
-        'async-lru==2.0.4',
         'attrs==23.2.0',
         'Babel==2.15.0',
         'beautifulsoup4==4.12.3',
@@ -27,7 +33,6 @@ setup(
         'cffi==1.16.0',
         'charset-normalizer==3.3.2',
         'click==8.1.7',
-        'comm==0.2.2',
         'contourpy==1.2.1',
         'cycler==0.12.1',
         'debugpy==1.8.1',
@@ -134,12 +139,12 @@ setup(
         'uvloop==0.19.0',
         'watchfiles==0.21.0',
         'wcwidth==0.2.13',
-        'webcolors==1.13',
+
+'webcolors==1.13',
         'webencodings==0.5.1',
         'websocket-client==1.8.0',
         'websockets==12.0',
         'widgetsnbextension==4.0.10'
     ],
-
-python_requires='>=3.12.0'
+    python_requires='>=3.11.7'
 )

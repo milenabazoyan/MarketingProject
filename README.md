@@ -82,7 +82,7 @@ Use `model.py` to train machine learning models on your fashion trend data and m
 ## Example: Training and evaluating a Random Forest model
 
 ### Step 1: Import Required Libraries
-
+```
 ```python
 from FashionTrendForecasting.trend_analysis.Simple_Model import * 
 import pandas as pd  

@@ -175,4 +175,4 @@ SQL operations are all included in the 'sql_interactions.py' file, which has 2 s
 - `get_detailed_item_trends(self) -> pd.DataFrame`: Functionality: Returns detailed attributes of items along with their trend score.
 - `get_sales_volume(self) -> pd.DataFrame`: Functionality: Returns detailed attributes of items along with their sales volume.
 - `get_top_n_items_with_highest_sales(self, season: str, n: int) -> pd.DataFrame`: Get item with the highest trend score for a given season.
-```
+

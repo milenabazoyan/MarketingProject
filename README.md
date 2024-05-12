@@ -9,7 +9,7 @@ To install FashionTrendForecasting, use the following pip command:
 ```bash
 pip install FashionTrendForecasting==0.1.0
 ```
-```
+
 For more details, updates, and versions, please visit our project on PyPI:
 [FashionTrendForecasting on PyPI]( "(https://pypi.org/project/FashionTrendForecasting/0.1.0/)")
 
@@ -45,7 +45,7 @@ FashionTrendForecasting aims to address the rapidly changing trends in the fashi
 
 ## Installation
 To install FashionTrendForecasting, use the following pip command:
-
+```
 ```bash
 pip install FashionTrendForecasting==0.1.0
 ```

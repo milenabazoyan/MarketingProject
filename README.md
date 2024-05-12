@@ -132,7 +132,7 @@ y_pred_rf = train_and_predict_rf(X_train, y_train, df, n_estimators=100, random_
 
 We use the `split_data()` function to split the dataset into features (`X_train`) and target variable (`y_train`) based on the column `'trend_score'`.
 ```
-
+```
 # Database Documentation
 
 ## Introduction

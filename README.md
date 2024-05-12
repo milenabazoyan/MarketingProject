@@ -59,4 +59,4 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 ## Contact
 
-For help and feedback, please contact [Our Team](mailto:your.email@example.com).
+For help and feedback, please contact [Our Team](mailto:fashiontrendforecasting@example.com).

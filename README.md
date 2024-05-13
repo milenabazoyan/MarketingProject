@@ -40,7 +40,7 @@ To run the project, follow these steps:
    python run.py
    ```
 4. **Access the Application**:
-   - **API Documentation**: To access the API documentation, visit [http://127.0.0.1:8000](http://127.0.0.1:8000). 
+   - **API Documentation**: To access the API documentation, visit [http://127.0.0.1:8080](http://127.0.0.1:8080). 
 
 
 ## Documentation
